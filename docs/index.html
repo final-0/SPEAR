@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SPEAR: Staged Pre-training and Expert Adapter Routing for Generalizable Optical Flow Learning</title>
+  <meta name="description" content="SPEAR: robust optical flow from clean images to severely corrupted observations, via staged pre-training on a frozen foundation encoder and expert adapter routing.">
+  <meta property="og:title" content="SPEAR: Staged Pre-training and Expert Adapter Routing for Generalizable Optical Flow Learning">
+  <meta property="og:description" content="Robust optical flow from clean images to severely corrupted observations.">
+  <meta property="og:url" content="https://final-0.github.io/SPEAR/">
+  <meta property="og:image" content="https://final-0.github.io/SPEAR/static/images/overview.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="static/css/style.css">
+</head>
+<body>
+
+<header class="hero">
+  <div class="container">
+    <h1 class="title"><span class="accent">SPEAR</span>: Staged Pre-training and Expert Adapter Routing<br>for Generalizable Optical Flow Learning</h1>
+    <p class="subtitle">Robust optical flow from clean images to severely corrupted observations</p>
+
+    <p class="venue"><b>NeurIPS 2026</b> Competition Track <strong>Oral Presentation</strong></p>
+
+    <div class="authors">
+      <span class="author"><a href="https://final-0.github.io/" target="_blank" rel="noopener">Takahiro Shindo</a><sup>1</sup></span>
+      <span class="author"><a href="https://www.twatanabe.net/" target="_blank" rel="noopener">Taiju Watanabe</a><sup>2</sup></span>
+    </div>
+    <div class="affiliations">
+      <span><sup>1</sup>Sony</span>
+      <span><sup>2</sup>Preferred Networks, Inc.</span>
+    </div>
+    <div class="emails">
+      <span><sup>1</sup><a href="mailto:Takahiro.Shindo@sony.com">Takahiro.Shindo@sony.com</a></span>
+      <span><sup>2</sup><a href="mailto:taijuwatanabe@preferred.jp">taijuwatanabe@preferred.jp</a></span>
+    </div>
+
+    <div class="buttons">
+      <a class="button" href="https://github.com/final-0/SPEAR" target="_blank" rel="noopener">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        <span>Code</span>
+      </a>
+      <!-- TODO: set the arXiv URL -->
+      <a class="button" href="#" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h9l5 5v15H6V2zm8 1.5V8h4.5L14 3.5zM8 12h10v1.5H8V12zm0 3h10v1.5H8V15zm0 3h7v1.5H8V18z"/></svg>
+        <span>arXiv</span>
+      </a>
+      <a class="button" href="https://spring-benchmark.org/opticalflow" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h16v-2H4v2zm2-4h3V9H6v7zm5 0h3V4h-3v12zm5 0h3v-5h-3v5z"/></svg>
+        <span>Spring Benchmark</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="container teaser">
+    <figure>
+      <a href="static/images/overview.png" target="_blank"><img src="static/images/overview.png" alt="SPEAR architecture and training phases"></a>
+      <figcaption>
+        Overview of SPEAR. The base flow branch (blue) is trained in stage 1 and then frozen; the robustness adaptation
+        branch (purple) adds the router and expert adapters in stage 2. The dots above each module show in which of
+        the five phases it is trained (orange) or frozen (blue).
+      </figcaption>
+    </figure>
+  </section>
+
+  <section class="container">
+    <h2>Abstract</h2>
+    <p class="abstract">
+      We present <b>SPEAR</b> (<b>S</b>taged <b>P</b>re-training and <b>E</b>xpert <b>A</b>dapter <b>R</b>outing),
+      a staged learning framework for generalizable optical flow that remains accurate across diverse visual
+      conditions, from clean images to severely corrupted observations. In the first stage, <b>staged pre-training</b> transfers
+      the representations of a large, frozen foundation encoder (Depth Anything V2-Large) into a WAFT-style flow
+      network, progressing from TartanAir through FlyingThings3D to Spring at native resolution. In the second stage,
+      the pre-trained flow network is kept frozen and robustness is acquired through lightweight
+      <b>expert adapters</b>. A <b>token router</b> built on the same frozen encoder tokens decides which
+      corruption-specific expert to activate, and a three-frame extension adds temporal context. Because every adapter
+      is zero-initialized and the router keeps its gates closed on clean input, robustness is gained without
+      sacrificing clean accuracy.
+    </p>
+  </section>
+
+  <section class="container">
+    <h2>Method</h2>
+    <div class="stages">
+      <div class="card">
+        <div class="card-label">Stage 1</div>
+        <h3>Staged pre-training</h3>
+        <p>
+          The Depth Anything V2 encoder stays frozen throughout. On TartanAir and FlyingThings3D, only the modules that
+          connect the large encoder to the WAFT update operator are trained, so the new features align with an existing
+          motion prior. On Spring, all non-encoder parameters are fine-tuned at native 1080&times;1920 resolution.
+        </p>
+        <ol class="phases">
+          <li><span>Phase 1</span>TartanAir pre-training</li>
+          <li><span>Phase 2</span>FlyingThings3D training</li>
+          <li><span>Phase 3</span>Spring training for the clean domain</li>
+        </ol>
+      </div>
+      <div class="card">
+        <div class="card-label">Stage 2</div>
+        <h3>Expert adapter routing</h3>
+        <p>
+          The flow network is frozen. A router reads the frozen encoder tokens of three frames and opens one gate per
+          corruption group (frost, other weather, compression-type). Gated expert adapters correct the features, and
+          gated temporal adapters exploit the third frame. A clean pass penalizes any regression against the frozen
+          two-frame model.
+        </p>
+        <ol class="phases" start="4">
+          <li><span>Phase 4</span>Spring training for the router</li>
+          <li><span>Phase 5</span>Spring training for the adapters</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="features">
+      <div class="feature"><h4>Frozen foundation encoder</h4><p>One set of DAv2-L tokens feeds both the flow branch and the router.</p></div>
+      <div class="feature"><h4>Routing without a new backbone</h4><p>The router is a small head on existing tokens, not a separate classifier network.</p></div>
+      <div class="feature"><h4>Zero-initialized experts</h4><p>Training starts from the clean model exactly; gates stay closed on clean input.</p></div>
+      <div class="feature"><h4>Three-frame context</h4><p>Temporal adapters fuse t&minus;1, t and t+1 when single frames are degraded.</p></div>
+    </div>
+  </section>
+
+  <section class="container">
+    <h2>Clean Accuracy</h2>
+    <figure>
+      <a href="static/images/clean_comparison.jpg" target="_blank"><img src="static/images/clean_comparison.jpg" alt="Optical flow on Spring: FreeFlow, WAFT and SPEAR"></a>
+      <figcaption>
+        Optical flow on Spring compared with FreeFlow and WAFT. For each scene: the input with a zoomed region,
+        error maps (red = larger error) and the estimated flow inside the zoomed region.
+      </figcaption>
+    </figure>
+  </section>
+
+  <section class="container">
+    <h2>Robustness</h2>
+    <figure>
+      <a href="static/images/robustness.jpg" target="_blank"><img src="static/images/robustness.jpg" alt="Optical flow under corruptions: base model vs SPEAR"></a>
+      <figcaption>
+        Each row applies a different corruption to the same Spring scene. Columns: clean input, clean prediction,
+        corrupted input, prediction of the stage-1 base model, and prediction of the final SPEAR model. The base model
+        breaks down under corruption, while SPEAR recovers flow close to the clean prediction.
+      </figcaption>
+    </figure>
+    <p class="center-note">
+      Evaluated on the <a href="https://spring-benchmark.org/opticalflow" target="_blank" rel="noopener">Spring optical
+      flow benchmark</a> and the corrupted RobustSpring test set of the
+      <a href="https://roco-spring.github.io/index.html" target="_blank" rel="noopener">RoCo challenge</a>.
+    </p>
+  </section>
+
+  <!--
+  <section class="container">
+    <h2>BibTeX</h2>
+    <pre class="bibtex"><code>@inproceedings{shindo_spear,
+  title     = {SPEAR: Staged Pre-training and Expert Adapter Routing for Generalizable Optical Flow Learning},
+  author    = {Shindo, Takahiro and Watanabe, Taiju},
+  booktitle = {},
+  year      = {}
+}</code></pre>
+  </section>
+  -->
+</main>
+
+<footer>
+  <div class="container">
+    SPEAR builds on <a href="https://github.com/princeton-vl/WAFT" target="_blank" rel="noopener">WAFT</a> and
+    <a href="https://github.com/DepthAnything/Depth-Anything-V2" target="_blank" rel="noopener">Depth Anything V2</a>.
+  </div>
+</footer>
+
+</body>
+</html>
