@@ -1,0 +1,27 @@
+{
+    "name": "clean-step1-tartanair",
+    "dataset": "tartanair",
+    "tartan_trajectories": "config/tartanair_trajectories.json",
+    "feature_encoder": "dav2",
+    "dav2_backbone": "vitl",
+    "iterative_module": "vits",
+    "algorithm": "waft-a2",
+    "var_min": 0,
+    "var_max": 10,
+    "iters": 5,
+    "image_size": [
+        480,
+        640
+    ],
+    "scale": -0.1,
+    "batch_size": 4,
+    "epsilon": 1e-08,
+    "lr": 0.0002,
+    "wdecay": 1e-05,
+    "clip": 1.0,
+    "gamma": 0.85,
+    "num_steps": 100000,
+    "restore_ckpt": "ckpts/dav2/spring.pth",
+    "use_bf16": true,
+    "refine_freeze": true
+}

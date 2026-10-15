@@ -1,0 +1,29 @@
+# Copy to spear_env.sh, edit, then `source spear_env.sh` in every shell you submit jobs from.
+# sbatch forwards these variables to the job (default --export=ALL).
+
+# --- repository / runtime -------------------------------------------------------
+export SPEAR_ROOT=/path/to/SPEAR                     # this repository (submit jobs from here)
+export SPEAR_CONTAINER=/path/to/spear_pt25.sif       # built from ./Dockerfile
+export SPEAR_VENV=/path/to/spear_venv                # created by jobs/prepare-step1-venv.sh
+export SPEAR_OUTPUT=/path/to/spear_outputs           # robust-step* runs, robust-eval JSON, *-submission
+export SPEAR_BIND=/path/to/datasets,/path/to/spear_outputs   # container --bind list (comma-separated); may be empty
+export SPEAR_SETUP=""                                # shell command run at the start of every job, e.g. "module load apptainer"
+export SPEAR_LOCAL_SCRATCH=""                        # optional node-local disk; datasets are copied to $SPEAR_LOCAL_SCRATCH/$SLURM_JOB_ID
+
+# --- Slurm (read by sbatch itself) ----------------------------------------------
+export SBATCH_PARTITION=your_partition
+export SBATCH_ACCOUNT=your_account
+
+# --- datasets -------------------------------------------------------------------
+export SPRING_ROOT=/path/to/spring                   # train/ test/ (+ val/ after jobs/prepare-step2-spring-val.sh)
+export ROBUST_SPRING_ROOT=/path/to/robust_spring     # <corruption>/test/<scene>/frame_{left,right}/
+export THINGS_ROOT=/path/to/FlyingThings3D           # frames_cleanpass/ optical_flow/
+export TARTAN_ROOT=/path/to/tartanair                # <scene>/{Easy,Hard}/P***/{image_left,flow}/
+export WEATHER_OVERLAY_DIR=/path/to/weather_overlays # frost/ rain/ snow/ (jobs/prepare-step3-weather-overlays.sh)
+
+# --- submission tools -----------------------------------------------------------
+export SUBSAMPLING_TOOLS=/path/to/subsampling_tools  # flow_subsampling, flow_robust_subsampling
+
+# --- only if the parent is not ours (retrained, or stored elsewhere) ------------
+# export SPEAR_PARENT=checkpoints/clean-step4-spring/waft-a2/dav2/42/20000.pth
+# export SPEAR_PARENT_SHA256=<output of sha256sum on that file>

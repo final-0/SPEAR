@@ -1,0 +1,14 @@
+spear_env.sh
+logs/*
+!logs/.gitkeep
+checkpoints/
+ckpts/
+depth-anything-ckpts/
+datasets/
+__pycache__/
+*.pyc
+*.pth
+*.pt
+*.sif
+*.hdf5
+*.flo5

@@ -1,0 +1,11 @@
+# Versions used for our runs: NGC PyTorch 25.04 container (Python 3.12, PyTorch 2.7, numpy 1.26.4),
+# plus the packages below (see Dockerfile and jobs/prepare-step1-venv.sh).
+timm==1.0.28
+xformers==0.0.30
+h5py==3.16.0
+opencv-python-headless==4.11.0.86
+# stage 2 (robust_finetune) only
+scikit-image==0.24.0
+imagecorruptions==1.1.2
+opencv-python==4.11.0.86
+setuptools>=65,<81          # imagecorruptions 1.1.2 imports pkg_resources (removed in setuptools 81)
